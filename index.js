@@ -181,10 +181,15 @@ async function loadAppIntoCache(appConfig) {
 
             // eslint-disable-next-line no-param-reassign
             appConfig.nextRun = nextRun;
-            mqttClient.publish(
-                globals.config.get('mqttConfig.out.baseTopic'),
-                JSON.stringify(appConfig)
-            );
+            if (
+                globals.config.has('mqttConfig.out.enable') &&
+                globals.config.get('mqttConfig.out.enable') === true
+            ) {
+                mqttClient.publish(
+                    globals.config.get('mqttConfig.out.baseTopic'),
+                    JSON.stringify(appConfig)
+                );
+            }
         });
     } else {
         app.session.close();
